@@ -1,7 +1,7 @@
 {
     "name": "shopwareAG/plugin-info",
     "description": "Read plugin.json",
-    "type": "project",
+    "type": "library",
     "license": "MIT",
     "require": {
         "php": ">=5.3.2"
