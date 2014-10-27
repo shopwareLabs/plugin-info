@@ -56,7 +56,7 @@ class InfoDecorator
         return $changeLogs[$language];
     }
 
-    public function getChangelog($version, $language = null)
+    public function getChangelog($version, $language)
     {
         $changeLogs = $this->getChangelogs($language);
 
