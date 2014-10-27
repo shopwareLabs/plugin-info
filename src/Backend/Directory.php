@@ -1,6 +1,6 @@
 <?php
 
-namespace PluginInfo\Backend;
+namespace Shopware\PluginInfo\Backend;
 
 class Directory implements BackendInterface
 {

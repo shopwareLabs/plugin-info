@@ -1,5 +1,5 @@
 <?php
 
-namespace PluginInfo\Exceptions;
+namespace Shopware\PluginInfo\Exceptions;
 
 class ConstraintException extends \Exception {};

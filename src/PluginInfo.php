@@ -1,8 +1,8 @@
 <?php
 
-namespace PluginInfo;
+namespace Shopware\PluginInfo;
 
-use PluginInfo\Backend\BackendInterface;
+use Shopware\PluginInfo\Backend\BackendInterface;
 
 class PluginInfo
 {

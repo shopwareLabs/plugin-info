@@ -4,11 +4,11 @@ class ConstraintTest extends PHPUnit_Framework_TestCase
 {
 
     /**
-     * @expectedException \PluginInfo\Exceptions\ConstraintException
+     * @expectedException \Shopware\PluginInfo\Exceptions\ConstraintException
      */
     public function testMissingLabel()
     {
-        $info = new \PluginInfo\PluginInfo(new \PluginInfo\Backend\ArrayTestCase());
+        $info = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\ArrayTestCase());
         $info = $info->get(
             array(
                 'json' => array(),
@@ -19,11 +19,11 @@ class ConstraintTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PluginInfo\Exceptions\ConstraintException
+     * @expectedException \Shopware\PluginInfo\Exceptions\ConstraintException
      */
     public function testCurrentVersionMissing()
     {
-        $info = new \PluginInfo\PluginInfo(new \PluginInfo\Backend\ArrayTestCase());
+        $info = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\ArrayTestCase());
         $info = $info->get(
             array(
                 'json' => array('label' => 'Hallo Welt')
@@ -38,7 +38,7 @@ class ConstraintTest extends PHPUnit_Framework_TestCase
      */
     public function testMissingInfoLanguage()
     {
-        $info = new \PluginInfo\PluginInfo(new \PluginInfo\Backend\ArrayTestCase());
+        $info = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\ArrayTestCase());
         $info = $info->get(
             array(
                 'json' => array('label' => 'Hallo Welt', 'currentVersion' => array('test')),
@@ -55,7 +55,7 @@ class ConstraintTest extends PHPUnit_Framework_TestCase
      */
     public function testMissingDescriptionLanguage()
     {
-        $info = new \PluginInfo\PluginInfo(new \PluginInfo\Backend\ArrayTestCase());
+        $info = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\ArrayTestCase());
         $info = $info->get(
             array(
                 'json' => array('label' => 'Hallo Welt', 'currentVersion' => array('test')),

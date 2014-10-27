@@ -74,7 +74,7 @@ class PluginInfoTest extends PHPUnit_Framework_TestCase
      */
     private function getInfo()
     {
-        $infoService = new \PluginInfo\PluginInfo(new \PluginInfo\Backend\Directory());
+        $infoService = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\Directory());
         $info = $infoService->get(__DIR__ . '/assets/Backend/SwagTestPlugin');
 
         return $info;

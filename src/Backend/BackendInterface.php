@@ -1,6 +1,6 @@
 <?php
 
-namespace PluginInfo\Backend;
+namespace Shopware\PluginInfo\Backend;
 
 interface BackendInterface
 {

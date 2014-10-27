@@ -1,8 +1,8 @@
 <?php
 
-namespace PluginInfo;
+namespace Shopware\PluginInfo;
 
-use PluginInfo\Struct\Info;
+use Shopware\PluginInfo\Struct\Info;
 
 class InfoDecorator
 {

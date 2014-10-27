@@ -1,10 +1,10 @@
 <?php
 
-namespace PluginInfo;
+namespace Shopware\PluginInfo;
 
-use PluginInfo\Backend\BackendInterface;
-use PluginInfo\Exceptions\ConstraintException;
-use PluginInfo\Struct\Info;
+use Shopware\PluginInfo\Backend\BackendInterface;
+use Shopware\PluginInfo\Exceptions\ConstraintException;
+use Shopware\PluginInfo\Struct\Info;
 
 class PluginInfoHydrator
 {

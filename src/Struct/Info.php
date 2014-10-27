@@ -1,6 +1,6 @@
 <?php
 
-namespace PluginInfo\Struct;
+namespace Shopware\PluginInfo\Struct;
 
 class Info
 {
