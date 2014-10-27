@@ -9,7 +9,7 @@ class Directory implements BackendInterface
      */
     private $path;
 
-    public function getPluginJson()
+    public function getPluginInfo()
     {
         $jsonPath = $this->path . DIRECTORY_SEPARATOR . 'plugin.json';
         if (!file_exists($jsonPath)) {
@@ -18,7 +18,6 @@ class Directory implements BackendInterface
 
         return json_decode(file_get_contents($jsonPath), true);
     }
-
 
     public function setPlugin($plugin)
     {

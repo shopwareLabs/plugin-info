@@ -88,19 +88,56 @@ class InfoDecorator
          * * le maxVersion
          * * not in blacklist array
          */
-        return version_compare($version, $minimum, '>=')
-            && version_compare($version, $maximum, '<=')
-            && !in_array($version, $blacklist);
+
+        return version_compare($version, $minimum, '>=') && version_compare($version, $maximum, '<=') && !in_array(
+            $version,
+            $blacklist
+        );
     }
 
-
-    public function getInfo()
+    public function getLicense()
     {
-
+        return $this->info->license;
     }
 
-    public function getStoreDescription()
+    public function getLink()
     {
+        return $this->info->link;
+    }
 
+    public function getAuthor()
+    {
+        return $this->info->author;
+    }
+
+    public function getCurrentVersion()
+    {
+        return $this->info->currentVersion;
+    }
+
+    public function getInfo($language = null)
+    {
+        if ($language == null) {
+            return $this->info->info;
+        }
+
+        if (!isset($this->info->info[$language])) {
+            throw new \OutOfRangeException("info for $language not available");
+        }
+
+        return $this->info->info[$language];
+    }
+
+    public function getStoreDescription($language = null)
+    {
+        if ($language == null) {
+            return $this->info->description;
+        }
+
+        if (!isset($this->info->description[$language])) {
+            throw new \OutOfRangeException("store description for $language not available");
+        }
+
+        return $this->info->description[$language];
     }
 }

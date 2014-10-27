@@ -11,6 +11,7 @@ class Info
     public $author;
     public $changelog;
     public $compatibility;
+    public $currentVersion;
 
     public $description;
     public $info;
