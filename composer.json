@@ -14,10 +14,5 @@
         "psr-4": {
             "Shopware\\PluginInfo\\": "src/"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.0"
-        }
     }
 }
