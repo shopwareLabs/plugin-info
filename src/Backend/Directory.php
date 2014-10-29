@@ -2,6 +2,12 @@
 
 namespace Shopware\PluginInfo\Backend;
 
+/**
+ * Backend for plugin structures in directories
+ *
+ * Class Directory
+ * @package Shopware\PluginInfo\Backend
+ */
 class Directory implements BackendInterface
 {
     /**

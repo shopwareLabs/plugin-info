@@ -51,6 +51,12 @@ class PluginInfo
         return new InfoDecorator($pluginStruct);
     }
 
+    /**
+     * validate a given plugin object against the defined json format
+     *
+     * @param $json
+     * @throws Exceptions\ValidatorException
+     */
     private function validate($json)
     {
         $retriever = new JsonSchema\Uri\UriRetriever();

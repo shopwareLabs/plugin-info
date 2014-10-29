@@ -2,6 +2,12 @@
 
 namespace Shopware\PluginInfo\Backend;
 
+/**
+ * Automatically detect the required backend
+ *
+ * Class AutoDetect
+ * @package Shopware\PluginInfo\Backend
+ */
 class AutoDetect implements BackendInterface
 {
     /**

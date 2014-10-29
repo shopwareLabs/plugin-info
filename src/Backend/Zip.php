@@ -2,6 +2,12 @@
 
 namespace Shopware\PluginInfo\Backend;
 
+/**
+ * Backend for zipped plugins
+ *
+ * Class Zip
+ * @package Shopware\PluginInfo\Backend
+ */
 class Zip implements BackendInterface
 {
     /**

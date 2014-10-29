@@ -4,6 +4,10 @@ namespace Shopware\PluginInfo;
 
 use Shopware\PluginInfo\Struct\Info;
 
+/**
+ * Class InfoDecorator
+ * @package Shopware\PluginInfo
+ */
 class InfoDecorator
 {
     /**
