@@ -1,6 +1,6 @@
 {
     "name": "shopware-ag/plugin-info",
-    "description": "Read plugin.json",
+    "description": "Read plugin metadata for shopware plugins",
     "type": "library",
     "license": "MIT",
     "require": {
