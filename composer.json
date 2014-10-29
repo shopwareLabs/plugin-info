@@ -1,5 +1,5 @@
 {
-    "name": "shopwareAG/plugin-info",
+    "name": "shopware-ag/plugin-info",
     "description": "Read plugin.json",
     "type": "library",
     "license": "MIT",
