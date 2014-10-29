@@ -9,7 +9,7 @@
     "author": "Jon Doe",
     "currentVersion": "1.0.6",
 
-    "changelogs": {
+    "changelog": {
         "de": {
             "1.0.6": "Korrigiert Installations-Probleme"
         }

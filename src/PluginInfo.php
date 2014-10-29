@@ -4,6 +4,10 @@ namespace Shopware\PluginInfo;
 
 use Shopware\PluginInfo\Backend\BackendInterface;
 
+use JsonSchema;
+use Shopware\PluginInfo\Exceptions\ConstraintException;
+use Shopware\PluginInfo\Exceptions\ValidatorException;
+
 class PluginInfo
 {
     /**
@@ -34,8 +38,30 @@ class PluginInfo
     public function get($plugin)
     {
         $pluginJson = $this->backend->getPluginInfo($plugin);
+
+        $this->validate($pluginJson);
+
         $pluginStruct = $this->hydrator->get($pluginJson);
 
         return new InfoDecorator($pluginStruct);
+    }
+
+    private function validate($json)
+    {
+        $retriever = new JsonSchema\Uri\UriRetriever();
+        $schema = $retriever->retrieve(
+            realpath(__DIR__ . '/../res/plugin-info-schema.json'),
+            'file://'
+        );
+
+        $validator = new JsonSchema\Validator();
+        $validator->check(json_decode(json_encode($json)), $schema);
+
+        if (!$validator->isValid()) {
+            $errors = array_map(function($error) {
+                return $error['property'] . ': ' . $error['message'];
+            }, $validator->getErrors());
+            throw new ValidatorException("Json not valid: " . implode(', ', $errors));
+        }
     }
 }

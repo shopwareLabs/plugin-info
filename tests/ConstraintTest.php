@@ -3,15 +3,47 @@
 class ConstraintTest extends PHPUnit_Framework_TestCase
 {
 
-    /**
-     * @expectedException \Shopware\PluginInfo\Exceptions\ConstraintException
-     */
-    public function testMissingLabel()
+    private function getBaseData()
+    {
+        return array(
+            'label' => array(
+                'en' => 'test',
+                'de' => 'test'
+            ),
+            'currentVersion' => '1.0.0',
+            'changelog' => array(
+                'de' => array(
+                    '1.0.0' => 'initial release'
+                ),
+                'en' => array(
+                    '1.0.0' => 'initial release'
+                )
+            )
+        );
+    }
+
+    public function testBaseData()
     {
         $info = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\ArrayTestCase());
         $info = $info->get(
             array(
-                'json' => array(),
+                'json' => $this->getBaseData()
+            )
+        );
+    }
+
+    /**
+     * @expectedException \Shopware\PluginInfo\Exceptions\ValidatorException
+     */
+    public function testMissingLabel()
+    {
+        $baseData = $this->getBaseData();
+        unset($baseData['label']);
+
+        $info = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\ArrayTestCase());
+        $info = $info->get(
+            array(
+                'json' => $baseData
             )
         );
 
@@ -19,18 +51,20 @@ class ConstraintTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Shopware\PluginInfo\Exceptions\ConstraintException
+     * @expectedException \Shopware\PluginInfo\Exceptions\ValidatorException
      */
     public function testCurrentVersionMissing()
     {
+        $baseData = $this->getBaseData();
+        unset($baseData['changelog']);
+
+
         $info = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\ArrayTestCase());
         $info = $info->get(
             array(
-                'json' => array('label' => 'Hallo Welt')
+                'json' => $baseData
             )
         );
-
-        $info->getInfo('fr');
     }
 
     /**
@@ -38,12 +72,12 @@ class ConstraintTest extends PHPUnit_Framework_TestCase
      */
     public function testMissingInfoLanguage()
     {
+        $baseData = $this->getBaseData();
+
         $info = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\ArrayTestCase());
         $info = $info->get(
             array(
-                'json' => array('label' => 'Hallo Welt', 'currentVersion' => array('test')),
-                'info' => array('de' => 'Hallo Welt', 'en' => 'Hello world'),
-                'description' => array('de' => 'Hallo Welt', 'en' => 'Hello world')
+                'json' => $baseData
             )
         );
 
@@ -55,15 +89,16 @@ class ConstraintTest extends PHPUnit_Framework_TestCase
      */
     public function testMissingDescriptionLanguage()
     {
+        $baseData = $this->getBaseData();
+
+
         $info = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\ArrayTestCase());
         $info = $info->get(
             array(
-                'json' => array('label' => 'Hallo Welt', 'currentVersion' => array('test')),
-                'info' => array('de' => 'Hallo Welt', 'en' => 'Hello world'),
-                'description' => array('de' => 'Hallo Welt', 'en' => 'Hello world')
+                'json' => $baseData
             )
         );
 
-        $info->getInfo('fr');
+        $info->getStoreDescription('fr');
     }
 }
