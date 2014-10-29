@@ -2,6 +2,7 @@
 
 namespace Shopware\PluginInfo;
 
+use Shopware\PluginInfo\Backend\AutoDetect;
 use Shopware\PluginInfo\Backend\BackendInterface;
 
 use JsonSchema;
@@ -23,8 +24,12 @@ class PluginInfo
     /**
      * @param BackendInterface $backend
      */
-    public function __construct(BackendInterface $backend)
+    public function __construct(BackendInterface $backend = null)
     {
+        if (!$backend) {
+            $backend = new AutoDetect();
+        }
+
         $this->backend = $backend;
         $this->hydrator = new PluginInfoHydrator();
     }
