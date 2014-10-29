@@ -11,26 +11,31 @@ class PluginInfo
      */
     private $backend;
 
+    /**
+     * @var PluginInfoHydrator
+     */
     private $hydrator;
 
+    /**
+     * @param BackendInterface $backend
+     */
     public function __construct(BackendInterface $backend)
     {
         $this->backend = $backend;
-        $this->hydrator = new PluginInfoHydrator($backend);
+        $this->hydrator = new PluginInfoHydrator();
     }
 
     /**
      * Depending on the backend, plugin could be a directory or zip
      *
-     * @param $plugin
+     * @param string $plugin
      * @return InfoDecorator
      */
     public function get($plugin)
     {
-        $this->backend->setPlugin($plugin);
+        $pluginJson = $this->backend->getPluginInfo($plugin);
+        $pluginStruct = $this->hydrator->get($pluginJson);
 
-        return $this->hydrator->get();
+        return new InfoDecorator($pluginStruct);
     }
-
-
 }

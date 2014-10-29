@@ -9,33 +9,27 @@ use Shopware\PluginInfo\Struct\Info;
 class PluginInfoHydrator
 {
     /**
-     * @var Backend\BackendInterface
+     * @param array $pluginData
+     * @return Info
+     * @throws ConstraintException
      */
-    private $backend;
-
-    public function __construct(BackendInterface $backend)
+    public function get($pluginData)
     {
-        $this->backend = $backend;
-    }
-
-    public function get()
-    {
-        $json = $this->backend->getPluginInfo();
-
         $struct = new Info();
 
-        $struct->label = $this->prepareLabel($json);
-        $struct->currentVersion= $this->prepareCurrentVersion($json);
-        $struct->copyright = isset($json['copyright']) ? $json['copyright'] : null;
-        $struct->link = isset($json['link']) ? $json['link'] : null;
-        $struct->license = isset($json['license']) ? $json['license'] : null;
-        $struct->author = isset($json['author']) ? $json['author'] : null;
-        $struct->changelog = isset($json['changelog']) ? $json['changelog'] : array();
-        $struct->compatibility = $this->prepareCompatibility($json);
-        $struct->description = $this->backend->getDescription();
-        $struct->info = $this->backend->getInfo();
+        $struct->label = $this->prepareLabel($pluginData);
+        $struct->currentVersion= $this->prepareCurrentVersion($pluginData);
+        $struct->copyright = isset($pluginData['copyright']) ? $pluginData['copyright'] : null;
+        $struct->link = isset($pluginData['link']) ? $pluginData['link'] : null;
+        $struct->license = isset($pluginData['license']) ? $pluginData['license'] : null;
+        $struct->author = isset($pluginData['author']) ? $pluginData['author'] : null;
+        $struct->changelog = isset($pluginData['changelog']) ? $pluginData['changelog'] : array();
+        $struct->compatibility = $this->prepareCompatibility($pluginData);
 
-        return new InfoDecorator($struct);
+        $struct->description = isset($pluginData['description']) ? $pluginData['description'] : array();
+        $struct->info = isset($pluginData['info']) ? $pluginData['info'] : array();
+
+        return $struct;
     }
 
     private function prepareCurrentVersion($json)

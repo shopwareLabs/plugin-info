@@ -4,7 +4,14 @@ namespace Shopware\PluginInfo\Struct;
 
 class Info
 {
+    /**
+     * @var string
+     */
     public $label;
+
+    /**
+     * @var string
+     */
     public $copyright;
     public $license;
     public $link;

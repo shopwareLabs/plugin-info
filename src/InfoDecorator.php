@@ -16,6 +16,10 @@ class InfoDecorator
         $this->info = $info;
     }
 
+    /**
+     * @param string $language
+     * @return string
+     */
     public function getLabel($language = 'en')
     {
         $label = $this->info->label;
@@ -31,16 +35,26 @@ class InfoDecorator
         return $label[$language];
     }
 
+    /**
+     * @return string
+     */
     public function getCopyright()
     {
         return $this->info->copyright;
     }
 
+    /**
+     * @return array
+     */
     public function getCompatibility()
     {
         return $this->info->compatibility;
     }
 
+    /**
+     * @param string $language
+     * @return array
+     */
     public function getChangelogs($language = null)
     {
         $changeLogs = $this->info->changelog;
@@ -56,6 +70,11 @@ class InfoDecorator
         return $changeLogs[$language];
     }
 
+    /**
+     * @param string $version
+     * @param string $language
+     * @return array
+     */
     public function getChangelog($version, $language)
     {
         $changeLogs = $this->getChangelogs($language);
@@ -67,11 +86,18 @@ class InfoDecorator
         return $changeLogs[$version];
     }
 
+    /**
+     * @return array
+     */
     public function getCompatibilities()
     {
         return $this->info->compatibility;
     }
 
+    /**
+     * @param string $version
+     * @return bool
+     */
     public function isCompatibleWith($version)
     {
         if ($this->getChangelogs() === null) {
@@ -95,6 +121,9 @@ class InfoDecorator
         );
     }
 
+    /**
+     * @return mixed
+     */
     public function getLicense()
     {
         return $this->info->license;
