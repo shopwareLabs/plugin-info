@@ -60,9 +60,14 @@ class PluginInfo
     private function validate($json)
     {
         $retriever = new JsonSchema\Uri\UriRetriever();
+
+        // Detect phar archives - they don't need the file:// prefix
+        $prefix = strpos(__DIR__, 'phar://') === 0 ? '' : 'file://';
+
         $schema = $retriever->retrieve(
-            'file://' . realpath(__DIR__ . '/../res/plugin-info-schema.json')
+            $prefix . __DIR__ . '/../res/plugin-info-schema.json'
         );
+
 
         $validator = new JsonSchema\Validator();
         $validator->check(json_decode(json_encode($json)), $schema);
