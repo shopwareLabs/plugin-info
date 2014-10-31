@@ -66,9 +66,8 @@ class Zip implements BackendInterface
         }
 
         throw new \RuntimeException(sprintf(
-            "File %s not found in zip %s.",
-            $filePath,
-            $zip
+            "File %s not found in zip",
+            $filePath
         ));
     }
 }
