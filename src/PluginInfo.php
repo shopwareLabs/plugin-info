@@ -61,8 +61,7 @@ class PluginInfo
     {
         $retriever = new JsonSchema\Uri\UriRetriever();
         $schema = $retriever->retrieve(
-            realpath(__DIR__ . '/../res/plugin-info-schema.json'),
-            'file://'
+            'file://' . realpath(__DIR__ . '/../res/plugin-info-schema.json')
         );
 
         $validator = new JsonSchema\Validator();
