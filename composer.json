@@ -1,5 +1,5 @@
 {
-    "name": "shopware-ag/plugin-info",
+    "name": "shopwarelabs/plugin-info",
     "description": "Read plugin metadata for shopware plugins",
     "type": "library",
     "license": "MIT",
