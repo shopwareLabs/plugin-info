@@ -4,8 +4,9 @@
     "properties": {
         "label": {
             "type": "object",
-            "description": "Full name of the plugin",
-            "required": true
+            "description": "This is a hash of language identifier (keys) and full name of the plugin (values).",
+            "required": true,
+            "additionalProperties": true
         },
         "copyright": {
             "type": "string",
@@ -35,12 +36,32 @@
         "changelog": {
             "type": "object",
             "description": "changelogs",
-            "required": true
+            "required": true,
+            "additionalProperties": true
         },
         "compatibility": {
             "type": "object",
             "description": "Compatibility hints",
-            "required": false
+            "required": false,
+            "properties": {
+                "minimumVersion": {
+                    "type": ["string", null],
+                    "description": "The minimum required shopware version."
+                },
+
+                "maximumVersion": {
+                    "type": ["string", null],
+                    "description": "The maximum supported shopware version."
+                },
+
+                "blacklist": {
+                    "type": "array",
+                    "description": "array of unsupported version",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
         }
     }
 }
