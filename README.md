@@ -9,7 +9,7 @@ The plugin info library allows you to analyze shopware plugin metadata of the ne
 Via Composer
 
 ``` bash
-$ composer require shopware-ag/plugin-info
+$ composer require shopwarelabs/plugin-info
 ```
 ## Usage
 
