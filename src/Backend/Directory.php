@@ -1,24 +1,31 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Shopware\PluginInfo\Backend;
 
 /**
  * Backend for plugin structures in directories
- *
- * Class Directory
- * @package Shopware\PluginInfo\Backend
  */
 class Directory implements BackendInterface
 {
     /**
-     * {@inheritdoc}
+     * @param array|string $plugin
+     *
+     * @throws \RuntimeException
      */
-    public function getPluginInfo($plugin)
+    public function getPluginInfo($plugin): array
     {
         $path = rtrim($plugin, '/') . '/';
 
         $jsonPath = $path . DIRECTORY_SEPARATOR . 'plugin.json';
-        if (!file_exists($jsonPath)) {
+        if (!is_file($jsonPath)) {
             throw new \RuntimeException("Cannot find $jsonPath");
         }
 

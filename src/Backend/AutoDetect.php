@@ -1,24 +1,29 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Shopware\PluginInfo\Backend;
 
 /**
  * Automatically detect the required backend
- *
- * Class AutoDetect
- * @package Shopware\PluginInfo\Backend
  */
 class AutoDetect implements BackendInterface
 {
     /**
-     * @param mixed $plugin
+     * @param array|string $plugin
+     *
      * @throws \RuntimeException
-     * @return array
      */
-    public function getPluginInfo($plugin)
+    public function getPluginInfo($plugin): array
     {
         switch (true) {
-            case is_array($plugin);
+            case \is_array($plugin):
                 $backend = new ArrayTestCase();
                 break;
             case is_dir($plugin):
@@ -28,7 +33,7 @@ class AutoDetect implements BackendInterface
                 $backend = new Zip();
                 break;
             default:
-                throw new \RuntimeException("Could not automatically detect type of given plugin");
+                throw new \RuntimeException('Could not automatically detect type of given plugin');
         }
 
         return $backend->getPluginInfo($plugin);

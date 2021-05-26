@@ -1,20 +1,34 @@
 <?php
 
-class ZipTest extends PHPUnit_Framework_TestCase
+declare(strict_types=1);
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Shopware\PluginInfo\Test;
+
+use PHPUnit\Framework\TestCase;
+use Shopware\PluginInfo\Backend\Zip;
+use Shopware\PluginInfo\PluginInfo;
+
+class ZipTest extends TestCase
 {
-    public function testZipBackend()
+    public function testZipBackend(): void
     {
-        $infoService = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\Zip());
+        $infoService = new PluginInfo(new Zip());
         $info = $infoService->get(__DIR__ . '/assets/SwagTestPlugin.zip');
 
-        $this->assertEquals(true, $info->isCompatibleWith('4.2.0'));
+        static::assertEquals(true, $info->isCompatibleWith('4.2.0'));
     }
 
-    public function testZipBackendNewPluginStructure()
+    public function testZipBackendNewPluginStructure(): void
     {
-        $infoService = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\Zip());
+        $infoService = new PluginInfo(new Zip());
         $info = $infoService->get(__DIR__ . '/assets/SwagNewPlugin.zip');
 
-        $this->assertEquals(true, $info->isCompatibleWith('5.2.12'));
+        static::assertEquals(true, $info->isCompatibleWith('5.2.12'));
     }
 }

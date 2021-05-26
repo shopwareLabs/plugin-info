@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Shopware\PluginInfo;
 
 use Shopware\PluginInfo\Struct\Info;
 
-/**
- * Class InfoDecorator
- * @package Shopware\PluginInfo
- */
 class InfoDecorator
 {
     /**
-     * @var Struct\Info
+     * @var Info
      */
     private $info;
 
@@ -20,11 +24,7 @@ class InfoDecorator
         $this->info = $info;
     }
 
-    /**
-     * @param string $language
-     * @return string
-     */
-    public function getLabel($language = 'en')
+    public function getLabel(?string $language = 'en'): string
     {
         $label = $this->info->label;
 
@@ -33,33 +33,23 @@ class InfoDecorator
         }
 
         if (!isset($label[$language])) {
-            throw new \OutOfRangeException("Label for $language not available");
+            throw new \OutOfRangeException(sprintf('Label for %s not available', $language));
         }
 
         return $label[$language];
     }
 
-    /**
-     * @return string
-     */
-    public function getCopyright()
+    public function getCopyright(): string
     {
         return $this->info->copyright;
     }
 
-    /**
-     * @return array
-     */
-    public function getCompatibility()
+    public function getCompatibility(): array
     {
         return $this->info->compatibility;
     }
 
-    /**
-     * @param string $language
-     * @return array
-     */
-    public function getChangelogs($language = null)
+    public function getChangelogs(?string $language = null): array
     {
         $changeLogs = $this->info->changelog;
 
@@ -74,12 +64,7 @@ class InfoDecorator
         return $changeLogs[$language];
     }
 
-    /**
-     * @param string $version
-     * @param string $language
-     * @return array
-     */
-    public function getChangelog($version, $language)
+    public function getChangelog(string $version, string $language): string
     {
         $changeLogs = $this->getChangelogs($language);
 
@@ -90,67 +75,56 @@ class InfoDecorator
         return $changeLogs[$version];
     }
 
-    /**
-     * @return array
-     */
-    public function getCompatibilities()
+    public function getCompatibilities(): array
     {
         return $this->info->compatibility;
     }
 
-    /**
-     * @param string $version
-     * @return bool
-     */
-    public function isCompatibleWith($version)
+    public function isCompatibleWith(string $version): bool
     {
         if ($this->getChangelogs() === null) {
             return true;
         }
 
-        $minimum = $this->info->compatibility['minimumVersion'] ? : '0.0.0';
-        $maximum = $this->info->compatibility['maximumVersion'] ? : '99.99.99';
-        $blacklist = $this->info->compatibility['blacklist'] ? : array();
+        $minimum = $this->info->compatibility['minimumVersion'] ?: '0.0.0';
+        $maximum = $this->info->compatibility['maximumVersion'] ?: '99.99.99';
+        $blacklist = $this->info->compatibility['blacklist'] ?: [];
 
-        /**
+        /*
          * Will return true, if the requested version is
          * * ge minVersion
          * * le maxVersion
          * * not in blacklist array
          */
 
-        return version_compare($version, $minimum, '>=') && version_compare($version, $maximum, '<=') && !in_array(
-            $version,
-            $blacklist
-        );
+        return version_compare($version, $minimum, '>=')
+            && version_compare($version, $maximum, '<=')
+            && !\in_array($version, $blacklist);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLicense()
+    public function getLicense(): string
     {
         return $this->info->license;
     }
 
-    public function getLink()
+    public function getLink(): array
     {
         return $this->info->link;
     }
 
-    public function getAuthor()
+    public function getAuthor(): string
     {
         return $this->info->author;
     }
 
-    public function getCurrentVersion()
+    public function getCurrentVersion(): string
     {
         return $this->info->currentVersion;
     }
 
-    public function getInfo($language = null)
+    public function getInfo($language = null): array
     {
-        if ($language == null) {
+        if ($language === null) {
             return $this->info->info;
         }
 
@@ -161,9 +135,9 @@ class InfoDecorator
         return $this->info->info[$language];
     }
 
-    public function getStoreDescription($language = null)
+    public function getStoreDescription($language = null): array
     {
-        if ($language == null) {
+        if ($language === null) {
             return $this->info->description;
         }
 

@@ -1,42 +1,54 @@
 <?php
 
-class AutoDetectTest extends PHPUnit_Framework_TestCase
-{
+declare(strict_types=1);
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-    public function testZip()
+namespace Shopware\PluginInfo\Test;
+
+use PHPUnit\Framework\TestCase;
+use Shopware\PluginInfo\PluginInfo;
+
+class AutoDetectTest extends TestCase
+{
+    public function testZip(): void
     {
-        $infoService = new \Shopware\PluginInfo\PluginInfo();
+        $infoService = new PluginInfo();
         $info = $infoService->get(__DIR__ . '/assets/SwagTestPlugin.zip');
 
-        $this->assertEquals(true, $info->isCompatibleWith('4.2.0'));
+        static::assertEquals(true, $info->isCompatibleWith('4.2.0'));
     }
 
-    public function testDirectory()
+    public function testDirectory(): void
     {
-        $infoService = new \Shopware\PluginInfo\PluginInfo();
+        $infoService = new PluginInfo();
         $info = $infoService->get(__DIR__ . '/assets/Backend/SwagTestPlugin');
 
-        $this->assertEquals(true, $info->isCompatibleWith('4.2.0'));
+        static::assertEquals(true, $info->isCompatibleWith('4.2.0'));
     }
 
-    public function testArray()
+    public function testArray(): void
     {
-        $infoService = new \Shopware\PluginInfo\PluginInfo();
-        $info = $infoService->get(array(
-            "json" => array(
-                'label' => array(
+        $infoService = new PluginInfo();
+        $info = $infoService->get([
+            'json' => [
+                'label' => [
                     'de' => 'test',
-                    'en' => 'test'
-                ),
-                'changelog' => array(
-                    'de' => array(
-                        '1.0.0' => 'test'
-                    )
-                ),
-                'currentVersion' => '1.0.0'
-            )
-        ));
+                    'en' => 'test',
+                ],
+                'changelog' => [
+                    'de' => [
+                        '1.0.0' => 'test',
+                    ],
+                ],
+                'currentVersion' => '1.0.0',
+            ],
+        ]);
 
-        $this->assertEquals(true, $info->isCompatibleWith('4.2.0'));
+        static::assertEquals(true, $info->isCompatibleWith('4.2.0'));
     }
 }

@@ -1,70 +1,66 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Shopware\PluginInfo\Backend;
 
 /**
  * Backend for zipped plugins
- *
- * Class Zip
- *
- * @package Shopware\PluginInfo\Backend
  */
 class Zip implements BackendInterface
 {
     /**
-     * {@inheritdoc}
+     * @param array|string $plugin
+     *
      * @throws \RuntimeException
      */
-    public function getPluginInfo($plugin)
+    public function getPluginInfo($plugin): array
     {
         $zipArchive = $this->openZipArchive($plugin);
 
         if ($path = $this->searchForPluginJson($zipArchive)) {
             $jsonString = $this->getFileFromZip($path, $zipArchive);
+
             return json_decode($jsonString, true);
         } elseif ($path = $this->searchForPluginXml($zipArchive)) {
             $xmlString = $this->getFileFromZip($path, $zipArchive);
+
             return $this->readXml($xmlString);
-        } else {
-            throw new \RuntimeException('Plugin info file not found in zip (plugin.json or plugin.xml)');
         }
+        throw new \RuntimeException('Plugin info file not found in zip (plugin.json or plugin.xml)');
     }
 
-    /**
-     * @param string $path
-     * @return \ZipArchive
-     */
-    private function openZipArchive($path)
+    private function openZipArchive(string $path): \ZipArchive
     {
         $zip = new \ZipArchive();
         if ($zip->open($path) !== true) {
-            throw new \RuntimeException("Could not open zip archive {$path}");
+            throw new \RuntimeException(sprintf('Could not open zip archive %s', $path));
         }
 
         return $zip;
     }
 
-    /**
-     * @param string $filePath
-     * @param \ZipArchive $zip
-     * @return string
-     */
-    private function getFileFromZip($filePath, \ZipArchive $zip)
+    private function getFileFromZip(string $filePath, \ZipArchive $zip): string
     {
         return $zip->getFromName($filePath);
     }
 
     /**
-     * @param \ZipArchive $zip
      * @return bool|string
      */
     private function searchForPluginJson(\ZipArchive $zip)
     {
         $filePath = preg_quote('plugin.json');
 
-        $pattern = "#(?P<namespace>Backend|Core|Frontend)/(?P<name>.*)/(?P<file>{$filePath})#i";
+        $pattern = sprintf('#(?P<namespace>Backend|Core|Frontend)/(?P<name>.*)/(?P<file>%s)#i', $filePath);
 
-        for ($i = 0; $i < $zip->numFiles; $i++) {
+        for ($i = 0; $i < $zip->numFiles; ++$i) {
             $filename = $zip->getNameIndex($i);
             if (preg_match($pattern, $filename)) {
                 return $filename;
@@ -75,16 +71,15 @@ class Zip implements BackendInterface
     }
 
     /**
-     * @param \ZipArchive $zip
      * @return bool|string
      */
     private function searchForPluginXml(\ZipArchive $zip)
     {
         $filePath = preg_quote('plugin.xml');
 
-        $pattern = "#(?P<name>.*)/(?P<file>{$filePath})#i";
+        $pattern = sprintf('#(?P<name>.*)/(?P<file>%s)#i', $filePath);
 
-        for ($i = 0; $i < $zip->numFiles; $i++) {
+        for ($i = 0; $i < $zip->numFiles; ++$i) {
             $filename = $zip->getNameIndex($i);
             if (preg_match($pattern, $filename)) {
                 return $filename;
@@ -94,11 +89,7 @@ class Zip implements BackendInterface
         return false;
     }
 
-    /**
-     * @param string $data
-     * @return array
-     */
-    private function readXml($data)
+    private function readXml(string $data): array
     {
         $dom = new \DOMDocument();
         $dom->loadXML($data);
@@ -106,28 +97,23 @@ class Zip implements BackendInterface
         return $this->parseInfo($dom);
     }
 
-    /**
-     * @param \DOMDocument $xml
-     * @return array
-     */
-    private function parseInfo(\DOMDocument $xml)
+    private function parseInfo(\DOMDocument $xml): array
     {
-        $xpath = new \DOMXPath($xml);
-
-        if (false === $entries = $xpath->query('//plugin')) {
-            return;
+        $entries = (new \DOMXPath($xml))->query('//plugin');
+        if ($entries === false) {
+            return [];
         }
 
         $entry = $entries[0];
         $info = [];
 
         foreach ($this->getChildren($entry, 'label') as $label) {
-            $lang = ($label->getAttribute('lang')) ? $label->getAttribute('lang') : 'en';
+            $lang = ($label->getAttribute('lang')) ?: 'en';
             $info['label'][$lang] = $label->nodeValue;
         }
 
         foreach ($this->getChildren($entry, 'description') as $description) {
-            $lang = ($description->getAttribute('lang')) ? $description->getAttribute('lang') : 'en';
+            $lang = ($description->getAttribute('lang')) ?: 'en';
             $info['description'][$lang] = trim($description->nodeValue);
         }
 
@@ -146,7 +132,7 @@ class Zip implements BackendInterface
             $version = $changelog->getAttribute('version');
 
             foreach ($this->getChildren($changelog, 'changes') as $changes) {
-                $lang = ($changes->getAttribute('lang')) ? $changes->getAttribute('lang') : 'en';
+                $lang = ($changes->getAttribute('lang')) ?: 'en';
                 $info['changelog'][$lang][$version] = $changes->nodeValue;
             }
         }
@@ -156,7 +142,7 @@ class Zip implements BackendInterface
             $info['compatibility'] = [
                 'minimumVersion' => $compatibility->getAttribute('minVersion'),
                 'maximumVersion' => $compatibility->getAttribute('maxVersion'),
-                'blacklist' => $this->getChildrenValues($compatibility, 'blacklist')
+                'blacklist' => $this->getChildrenValues($compatibility, 'blacklist'),
             ];
         }
 
@@ -166,14 +152,11 @@ class Zip implements BackendInterface
     /**
      * Get child elements by name.
      *
-     * @param \DOMNode $node
-     * @param mixed    $name
-     *
      * @return \DOMElement[]
      */
-    private function getChildren(\DOMNode $node, $name)
+    private function getChildren(\DOMNode $node, string $name): array
     {
-        $children = array();
+        $children = [];
         foreach ($node->childNodes as $child) {
             if ($child instanceof \DOMElement && $child->localName === $name) {
                 $children[] = $child;
@@ -183,12 +166,7 @@ class Zip implements BackendInterface
         return $children;
     }
 
-    /**
-     * @param \DOMNode $node
-     * @param $name
-     * @return null|\DOMElement
-     */
-    private function getFirstChild(\DOMNode $node, $name)
+    private function getFirstChild(\DOMNode $node, string $name): ?\DOMElement
     {
         if ($children = $this->getChildren($node, $name)) {
             return $children[0];
@@ -200,14 +178,11 @@ class Zip implements BackendInterface
     /**
      * Get child element values by name.
      *
-     * @param \DOMNode $node
-     * @param mixed    $name
-     *
      * @return \DOMElement[]
      */
-    private function getChildrenValues(\DOMNode $node, $name)
+    private function getChildrenValues(\DOMNode $node, string $name): array
     {
-        $children = array();
+        $children = [];
         foreach ($node->childNodes as $child) {
             if ($child instanceof \DOMElement && $child->localName === $name) {
                 $children[] = $child->nodeValue;

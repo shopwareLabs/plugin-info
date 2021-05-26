@@ -1,82 +1,117 @@
 <?php
 
-class PluginInfoTest extends PHPUnit_Framework_TestCase
+declare(strict_types=1);
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Shopware\PluginInfo\Test;
+
+use PHPUnit\Framework\TestCase;
+use Shopware\PluginInfo\Backend\Directory;
+use Shopware\PluginInfo\InfoDecorator;
+use Shopware\PluginInfo\PluginInfo;
+
+class DirectoryTest extends TestCase
 {
-    public function testCheckVersionShouldFail()
+    public function testCheckVersionShouldFail(): void
     {
         $info = $this->getInfo();
 
-        $this->assertEquals(false, $info->isCompatibleWith('4.1.0'));
+        static::assertEquals(false, $info->isCompatibleWith('4.1.0'));
     }
 
-    public function testCheckVersionShouldSucceed()
+    public function testCheckVersionShouldSucceed(): void
     {
         $info = $this->getInfo();
 
-        $this->assertEquals(true, $info->isCompatibleWith('4.2.0'));
+        static::assertEquals(true, $info->isCompatibleWith('4.2.0'));
     }
 
-    public function testCheckVersionBlacklist()
+    public function testCheckVersionBlacklist(): void
     {
         $info = $this->getInfo();
 
-        $this->assertEquals(false, $info->isCompatibleWith('4.1.4'));
+        static::assertEquals(false, $info->isCompatibleWith('4.1.4'));
     }
 
-    public function testLabel()
+    public function testLabel(): void
     {
         $info = $this->getInfo();
 
-        $this->assertEquals('Mehrfachänderung', $info->getLabel('de'));
-        $this->assertEquals('Multiedit', $info->getLabel('en'));
+        static::assertEquals('Mehrfachänderung', $info->getLabel('de'));
+        static::assertEquals('Multiedit', $info->getLabel('en'));
     }
 
-    public function testCopyright()
+    public function testCopyright(): void
     {
         $info = $this->getInfo();
 
-        $this->assertEquals('(c) by asd', $info->getCopyright());
+        static::assertEquals('(c) by asd', $info->getCopyright());
     }
 
-    public  function testLicense()
+    public function testCompatibility(): void
     {
         $info = $this->getInfo();
 
-        $this->assertEquals('MIT 1234', $info->getLicense());
+        static::assertEquals([
+            'minimumVersion' => '4.1.3',
+            'maximumVersion' => '99.99.99',
+            'blacklist' => [0 => '4.1.4'],
+        ], $info->getCompatibility());
     }
 
-    public function getLink()
+    public function testChangelogs(): void
     {
         $info = $this->getInfo();
 
-        $this->assertEquals('http://wasdas.de', $info->getLink());
+        static::assertEquals([
+            'de' => [
+                    '1.0.6' => 'Korrigiert Installations-Probleme',
+                ],
+        ], $info->getChangelogs());
     }
 
-    public function testAuthor()
+    public function testChangelog(): void
     {
         $info = $this->getInfo();
 
-        $this->assertEquals('Jon Doe', $info->getAuthor());
+        static::assertEquals('Korrigiert Installations-Probleme', $info->getChangelog('1.0.6', 'de'));
     }
 
-
-    public function testCurrentVersion()
+    public function testLicense(): void
     {
         $info = $this->getInfo();
 
-        $this->assertEquals('1.0.6', $info->getCurrentVersion());
+        static::assertEquals('MIT 1234', $info->getLicense());
     }
 
-
-
-    /**
-     * @return \PluginInfo\InfoDecorator
-     */
-    private function getInfo()
+    public function getLink(): void
     {
-        $infoService = new \Shopware\PluginInfo\PluginInfo(new \Shopware\PluginInfo\Backend\Directory());
-        $info = $infoService->get(__DIR__ . '/assets/Backend/SwagTestPlugin');
+        $info = $this->getInfo();
 
-        return $info;
+        static::assertEquals('http://wasdas.de', $info->getLink());
+    }
+
+    public function testAuthor(): void
+    {
+        $info = $this->getInfo();
+
+        static::assertEquals('Jon Doe', $info->getAuthor());
+    }
+
+    public function testCurrentVersion(): void
+    {
+        $info = $this->getInfo();
+
+        static::assertEquals('1.0.6', $info->getCurrentVersion());
+    }
+
+    private function getInfo(): InfoDecorator
+    {
+        return (new PluginInfo(new Directory()))->get(__DIR__ . '/assets/Backend/SwagTestPlugin');
     }
 }
